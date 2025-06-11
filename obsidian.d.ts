@@ -1175,7 +1175,7 @@ export class FileManager {
      * @throws any errors that your callback function throws
      * @public
      */
-    processFrontMatter(file: TFile, fn: (frontmatter: Frontmatter) => void, options?: DataWriteOptions): Promise<void>;
+    processFrontMatter(file: TFile, fn: (frontmatter: any) => void, options?: DataWriteOptions): Promise<void>;
 
     /**
      * Resolves a unique path for the attachment file being saved.
@@ -2748,7 +2748,7 @@ export abstract class Plugin extends Component {
     registerMarkdownPostProcessor(postProcessor: MarkdownPostProcessor, sortOrder?: number): MarkdownPostProcessor;
     /**
      * Register a special post processor that handles fenced code given a language and a handler.
-     * This special post processor takes care of removing the <pre><code> and create a <div> that
+     * This special post processor takes care of removing the `<pre><code>` and create a `<div>` that
      * will be passed to the handler, and is expected to be filled with custom elements.
      * @see {@link https://docs.obsidian.md/Plugins/Editor/Markdown+post+processing#Post-process+Markdown+code+blocks}
      * @public

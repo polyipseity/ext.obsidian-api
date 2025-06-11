@@ -1,5 +1,38 @@
 # Changelog
 
+## v1.5.11
+
+- Fixed `revealLeaf` failing to focus the correct window.
+- If you are using the `SliderComponent` in your app, be aware, the behavior of the component has changed in 1.5.9. Now, instead of updating the value when the slider is dragged, it will only update the value when the slider is released. If your plugin was relying on the old behavior, you will need to update your plugin code to call `.setInstant(true)` on the slider.
+  **Note:** Because `setInstant` is a new function, you'll also need to check to see if the function exists before calling it. This will ensure your plugin maintains backwards compatibility when being run on older versions of Obsidian.
+
+## v.1.5.7
+
+### `Plugin.onExternalSettingsChange`
+
+There's a new callback function for plugins to react to when plugin settings (`data.json`) get changed on disk. This callback can be used to reload settings when they are updated by an external application or when the settings get synced using a file syncing service like Obsidian Sync.
+
+### New `Vault.getFileByPath` and `Vault.getFolderByPath` utility functions
+
+The `getAbstractFileByPath` has long been a point of confusion with plugin developers. More often than not,
+you are looking for either a file or a folder. And you know which you want at call-time. Instead of using
+`getAbstractFileByPath` then checking if the result is an instance of `TFile` or `TFolder`, now you can just
+use `getFileByPath` or `getFolderByPath` to automatically do this check.
+
+### `View.scope` is now public
+
+Finally `scope` is made public on the `View` class. This means you can assign hotkeys for when your view is
+active and focused.
+
+### New `getFrontMatterInfo` utility
+
+There is now a canonical way to find the offsets of where the frontmatter ends and where the content starts in a file.
+
+### `FileManager.getAvailablePathForAttachment`
+
+If your plugin saves attachments to the vault, you should be using `getAvailablePathForAttachment`. It will generate a safe path for you to use that respects the user's settings for file attachments.
+
+
 ## v1.4.4
 
 We've exposed our helper function for setting tooltips on elements (`setTooltip`) as well as added a new progress bar component.
