@@ -116,7 +116,7 @@ export function addIcon(iconId: string, svgContent: string): void;
 
 /**
  * This is the API version of the app, which follows the release cycle of the desktop app.
- * Example: "0.13.21"
+ * Example: '0.13.21'
  * @public
  */
 export let apiVersion: string;
@@ -219,6 +219,7 @@ export class ButtonComponent extends BaseComponent {
      * @public
      */
     setDisabled(disabled: boolean): this;
+
     /**
      * @public
      */
@@ -291,6 +292,7 @@ export interface CachedMetadata {
      */
     frontmatter?: FrontMatterCache;
     /**
+     * Position of the frontmatter in the file.
      * @public
      */
     frontmatterPosition?: Pos;
@@ -303,6 +305,7 @@ export interface CachedMetadata {
      * @public
      */
     blocks?: Record<string, BlockCache>;
+
 }
 
 /**
@@ -310,9 +313,100 @@ export interface CachedMetadata {
  */
 export interface CacheItem {
     /**
+     * Position of this item in the note.
      * @public
      */
     position: Pos;
+
+}
+
+/**
+ * Implementation of the vault adapter for mobile devices.
+ * @public
+ */
+export class CapacitorAdapter implements DataAdapter {
+
+    /**
+     * @public
+     */
+    getName(): string;
+
+    /**
+     * @public
+     */
+    mkdir(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    trashSystem(normalizedPath: string): Promise<boolean>;
+    /**
+     * @public
+     */
+    trashLocal(normalizedPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    rmdir(normalizedPath: string, recursive: boolean): Promise<void>;
+    /**
+     * @public
+     */
+    read(normalizedPath: string): Promise<string>;
+    /**
+     * @public
+     */
+    readBinary(normalizedPath: string): Promise<ArrayBuffer>;
+    /**
+     * @public
+     */
+    write(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    writeBinary(normalizedPath: string, data: ArrayBuffer, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    append(normalizedPath: string, data: string, options?: DataWriteOptions): Promise<void>;
+    /**
+     * @public
+     */
+    process(normalizedPath: string, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
+    /**
+     * @public
+     */
+    getResourcePath(normalizedPath: string): string;
+
+    /**
+     * @public
+     */
+    remove(normalizedPath: string): Promise<void>;
+
+    /**
+     * @public
+     */
+    rename(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    copy(normalizedPath: string, normalizedNewPath: string): Promise<void>;
+    /**
+     * @public
+     */
+    exists(normalizedPath: string, sensitive?: boolean): Promise<boolean>;
+
+    /**
+     * @public
+     */
+    stat(normalizedPath: string): Promise<Stat | null>;
+    /**
+     * @public
+     */
+    list(normalizedPath: string): Promise<ListedFiles>;
+
+    /**
+     * @public
+     */
+    getFullPath(normalizedPath: string): string;
 
 }
 
@@ -322,7 +416,7 @@ export interface CacheItem {
  */
 export interface CloseableComponent {
     /** @public */
-    close(): any;
+    close(): void;
 }
 
 /**
@@ -404,10 +498,10 @@ export interface Command {
      * @example
      * ```ts
      * this.addCommand({
-     *   id: "print-greeting-to-console",
-     *   name: "Print greeting to console",
+     *   id: 'print-greeting-to-console',
+     *   name: 'Print greeting to console',
      *   callback: () => {
-     *     console.log("Hey, you!");
+     *     console.log('Hey, you!');
      *   },
      * });
      * ```
@@ -416,12 +510,12 @@ export interface Command {
     callback?: () => any;
     /**
      * Complex callback, overrides the simple callback.
-     * Used to "check" whether your command can be performed in the current circumstances.
+     * Used to 'check' whether your command can be performed in the current circumstances.
      * For example, if your command requires the active focused pane to be a MarkdownView, then
      * you should only return true if the condition is satisfied. Returning false or undefined causes
      * the command to be hidden from the command palette.
      *
-     * @param checking - Whether the command palette is just "checking" if your command should show right now.
+     * @param checking - Whether the command palette is just 'checking' if your command should show right now.
      * If checking is true, then this function should not perform any action.
      * If checking is false, then this function should perform the action.
      * @returns Whether this command can be executed at the moment.
@@ -742,9 +836,9 @@ export interface DataWriteOptions {
  * const debounced = debounce((text: string) => {
  *     console.log(text);
  * }, 1000, true);
- * debounced("Hello world"); // this will not be printed
+ * debounced('Hello world'); // this will not be printed
  * await sleep(500);
- * debounced("World, hello"); // this will be printed to the console.
+ * debounced('World, hello'); // this will be printed to the console.
  * ```
  * @public
  */
@@ -907,7 +1001,7 @@ export type EditorCommandName = 'goUp' | 'goDown' | 'goLeft' | 'goRight' | 'goSt
 export const editorEditorField: StateField<EditorView>;
 
 /**
- * Use this StateField to get information about this markdown editor, such as the associated file, or the Editor.
+ * Use this StateField to get information about this Markdown editor, such as the associated file, or the Editor.
  * @public
  */
 export const editorInfoField: StateField<MarkdownFileInfo>;
@@ -1084,11 +1178,11 @@ export class Events {
     /**
      * @public
      */
-    on(name: string, callback: (...data: any) => any, ctx?: any): EventRef;
+    on(name: string, callback: (...data: unknown[]) => unknown, ctx?: any): EventRef;
     /**
      * @public
      */
-    off(name: string, callback: (...data: any) => any): void;
+    off(name: string, callback: (...data: unknown[]) => unknown): void;
     /**
      * @public
      */
@@ -1096,11 +1190,11 @@ export class Events {
     /**
      * @public
      */
-    trigger(name: string, ...data: any[]): void;
+    trigger(name: string, ...data: unknown[]): void;
     /**
      * @public
      */
-    tryTrigger(evt: EventRef, args: any[]): void;
+    tryTrigger(evt: EventRef, args: unknown[]): void;
 }
 
 /**
@@ -1145,7 +1239,7 @@ export class FileManager {
     /**
      * Gets the folder that new files should be saved to, given the user's preferences.
      * @param sourcePath - The path to the current open/focused file,
-     * used when the user wants new files to be created "in the same folder".
+     * used when the user wants new files to be created 'in the same folder'.
      * Use an empty string if there is no active file.
      * @param newFilePath - The path to the file that will be newly created,
      * used to infer what settings to use based on the path's extension.
@@ -1169,7 +1263,7 @@ export class FileManager {
      */
     trashFile(file: TAbstractFile): Promise<void>;
     /**
-     * Generate a markdown link based on the user's preferences.
+     * Generate a Markdown link based on the user's preferences.
      * @param file - the file to link to.
      * @param sourcePath - where the link is stored in, used to compute relative links.
      * @param subpath - A subpath, starting with `#`, used for linking to headings or blocks.
@@ -1184,11 +1278,18 @@ export class FileManager {
      *
      * Remember to handle errors thrown by this method.
      *
-     * @param file - the file to be modified. Must be a markdown file.
+     * @param file - the file to be modified. Must be a Markdown file.
      * @param fn - a callback function which mutates the frontmatter object synchronously.
      * @param options - write options.
      * @throws YAMLParseError if the YAML parsing fails
      * @throws any errors that your callback function throws
+     * @example
+     * ```ts
+     * app.fileManager.processFrontMatter(file, (frontmatter) => {
+     *     frontmatter['key1'] = value;
+     *     delete frontmatter['key2'];
+     * });
+     * ```
      * @public
      */
     processFrontMatter(file: TFile, fn: (frontmatter: any) => void, options?: DataWriteOptions): Promise<void>;
@@ -1228,6 +1329,7 @@ export interface FileStats {
 }
 
 /**
+ * Implementation of the vault adapter for desktop.
  * @public
  */
 export class FileSystemAdapter implements DataAdapter {
@@ -1367,7 +1469,7 @@ export abstract class FileView extends ItemView {
     /**
      * @public
      */
-    getState(): any;
+    getState(): Record<string, unknown>;
 
     /**
      * @public
@@ -1409,6 +1511,19 @@ export interface FootnoteCache extends CacheItem {
     id: string;
 }
 
+/**
+ * @public
+ */
+export interface FootnoteSubpathResult extends SubpathResult {
+    /**
+     * @public
+     */
+    type: 'footnote';
+    /**
+     * @public
+     */
+    footnote: FootnoteCache;
+}
 
 /**
  * @public
@@ -1457,11 +1572,6 @@ export interface FuzzyMatch<T> {
 /**
  * @public
  */
-export function fuzzySearch(q: PreparedQuery, text: string): SearchResult | null;
-
-/**
- * @public
- */
 export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
     /**
      * @public
@@ -1490,6 +1600,7 @@ export abstract class FuzzySuggestModal<T> extends SuggestModal<FuzzyMatch<T>> {
 }
 
 /**
+ * Combines all tags from frontmatter and note content into a single array.
  * @public
  */
 export function getAllTags(cache: CachedMetadata): string[] | null;
@@ -1519,6 +1630,9 @@ export function getIcon(iconId: string): SVGSVGElement | null;
 export function getIconIds(): IconName[];
 
 /**
+ * Converts the linktext to a linkpath.
+ * @param linktext A wikilink without the leading [[ and trailing ]]
+ * @returns the name of the file that is being linked to.
  * @public
  */
 export function getLinkpath(linktext: string): string;
@@ -1532,6 +1646,7 @@ export interface HeadingCache extends CacheItem {
      */
     heading: string;
     /**
+     * Number between 1 and 6.
      * @public
      */
     level: number;
@@ -1581,12 +1696,13 @@ export interface Hotkey {
  */
 export interface HoverLinkSource {
     /**
-     * The string that will be displayed in the 'Page preview' plugin settings. It should match your plugin's display name.
+     * Text displayed in the 'Page preview' plugin settings.
+     * It should match the plugin's display name.
      * @public
      */
     display: string;
     /**
-     * Whether or not the `hover-link` event requires the 'Mod' key to be pressed to trigger.
+     * Whether the `hover-link` event requires the 'Mod' key to be pressed to trigger.
      * @public
      */
     defaultMod: boolean;
@@ -1696,7 +1812,8 @@ export abstract class ItemView extends View {
 }
 
 /**
- * Iterate links and embeds. If callback returns true, the iteration process will be interrupted.
+ * Iterate links and embeds.
+ * If callback returns true, the iteration process will be interrupted.
  * @returns true if callback ever returns true, false otherwise.
  * @public
  * @deprecated
@@ -1704,6 +1821,7 @@ export abstract class ItemView extends View {
 export function iterateCacheRefs(cache: CachedMetadata, cb: (ref: ReferenceCache) => boolean | void): boolean;
 
 /**
+ * If callback returns true, the iteration process will be interrupted.
  * @returns true if callback ever returns true, false otherwise.
  * @public
  */
@@ -1874,18 +1992,22 @@ export function loadPdfJs(): Promise<any>;
 export function loadPrism(): Promise<any>;
 
 /**
+ * Location within a Markdown document
  * @public
  */
 export interface Loc {
     /**
+     * Line number.
      * @public
      */
     line: number;
     /**
+     * Column number.
      * @public
      */
     col: number;
     /**
+     * Number of characters from the beginning of the file.
      * @public
      */
     offset: number;
@@ -1965,7 +2087,7 @@ export interface MarkdownFileInfo extends HoverParent {
  * Post processors can mutate the DOM to render various things, such as mermaid graphs, latex equations, or custom controls.
  *
  * If your post processor requires lifecycle management, for example, to clear an interval, kill a subprocess, etc when this element is
- * removed from the app, look into {@link MarkdownPostProcessorContext#addChild}
+ * removed from the app, look into {@link MarkdownPostProcessorContext.addChild}
  * @public
  */
 export interface MarkdownPostProcessor {
@@ -1989,7 +2111,10 @@ export interface MarkdownPostProcessorContext {
      * @public
      */
     docId: string;
-    /** @public */
+    /**
+     * The path to the associated file. Any links are assumed to be relative to the `sourcePath`.
+     * @public
+     */
     sourcePath: string;
     /** @public */
     frontmatter: any | null | undefined;
@@ -2090,8 +2215,8 @@ export class MarkdownRenderChild extends Component {
     containerEl: HTMLElement;
     /**
      * @param containerEl - This HTMLElement will be used to test whether this component is still alive.
-     * It should be a child of the markdown preview sections, and when it's no longer attached
-     * (for example, when it is replaced with a new version because the user edited the markdown source code),
+     * It should be a child of the Markdown preview sections, and when it's no longer attached
+     * (for example, when it is replaced with a new version because the user edited the Markdown source code),
      * this component will be unloaded.
      * @public
      */
@@ -2112,17 +2237,17 @@ export abstract class MarkdownRenderer extends MarkdownRenderChild implements Ma
     abstract get file(): TFile;
 
     /**
-     * Renders markdown string to an HTML element.
+     * Renders Markdown string to an HTML element.
      * @public
      * @deprecated - use {@link MarkdownRenderer.render}
      */
     static renderMarkdown(markdown: string, el: HTMLElement, sourcePath: string, component: Component): Promise<void>;
     /**
-     * Renders markdown string to an HTML element.
+     * Renders Markdown string to an HTML element.
      * @param app - A reference to the app object
-     * @param markdown - The markdown source code
+     * @param markdown - The Markdown source code
      * @param el - The element to append to
-     * @param sourcePath - The normalized path of this markdown file, used to resolve relative internal links
+     * @param sourcePath - The normalized path of this Markdown file, used to resolve relative internal links
      * @param component - A parent component to manage the lifecycle of the rendered child components.
      * @public
      */
@@ -2346,7 +2471,7 @@ export class MenuSeparator {
 
 /**
  *
- * Linktext is any internal link that is composed of a path and a subpath, such as "My note#Heading"
+ * Linktext is any internal link that is composed of a path and a subpath, such as 'My note#Heading'
  * Linkpath (or path) is the path part of a linktext
  * Subpath is the heading/block ID part of a linktext.
  *
@@ -2396,7 +2521,6 @@ export class MetadataCache extends Events {
      *
      * Note: This is not called when a file is renamed for performance reasons.
      * You must hook the vault rename event for those.
-     * (Details: https://github.com/obsidianmd/obsidian-api/issues/77)
      * @public
      */
     on(name: 'changed', callback: (file: TFile, data: string, cache: CachedMetadata) => any, ctx?: any): EventRef;
@@ -2571,7 +2695,7 @@ export interface ObsidianProtocolData {
     /** @public */
     action: string;
     /** @public */
-    [key: string]: string;
+    [key: string]: string | 'true';
 }
 
 /**
@@ -2584,9 +2708,9 @@ export type ObsidianProtocolHandler = (params: ObsidianProtocolData) => any;
  */
 export interface OpenViewState {
     /** @public */
-    state?: any;
+    state?: Record<string, unknown>;
     /** @public */
-    eState?: any;
+    eState?: Record<string, unknown>;
     /** @public */
     active?: boolean;
     /** @public */
@@ -2619,6 +2743,9 @@ export function parseFrontMatterStringArray(frontmatter: any | null, key: string
 export function parseFrontMatterTags(frontmatter: any | null): string[] | null;
 
 /**
+ * Parses the linktext of a wikilink into its component parts.
+ * @param linktext A wikilink without the leading [[ and trailing ]]
+ * @returns filepath and subpath (subpath can refer either to a block id, or a heading)
  * @public
  */
 export function parseLinktext(linktext: string): {
@@ -2727,6 +2854,11 @@ export abstract class Plugin extends Component {
      * @public
      */
     constructor(app: App, manifest: PluginManifest);
+
+    /**
+     * @public
+     */
+    onload(): Promise<void> | void;
     /**
      * Adds a ribbon icon to the left bar.
      * @param icon - The icon name to be used. See {@link addIcon}
@@ -2745,11 +2877,17 @@ export abstract class Plugin extends Component {
     addStatusBarItem(): HTMLElement;
     /**
      * Register a command globally.
-     * Registered commands will be available from the @{link https://help.obsidian.md/Plugins/Command+palette Command pallete}.
+     * Registered commands will be available from the @{link https://help.obsidian.md/Plugins/Command+palette Command palette}.
      * The command id and name will be automatically prefixed with this plugin's id and name.
      * @public
      */
     addCommand(command: Command): Command;
+    /**
+     * Manually remove a command from the list of global commands.
+     * This should not be needed unless your plugin registers commands dynamically.
+     * @public
+     */
+    removeCommand(commandId: string): void;
     /**
      * Register a settings tab, which allows users to change settings.
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
@@ -2761,7 +2899,7 @@ export abstract class Plugin extends Component {
      */
     registerView(type: string, viewCreator: ViewCreator): void;
     /**
-     * Registers a view with the 'Page preview' core plugin as an emitter of the 'hover-link' on the event.
+     * Registers a view with the 'Page preview' core plugin as an emitter of the 'hover-link' event.
      * @public
      */
     registerHoverLinkSource(id: string, info: HoverLinkSource): void;
@@ -2794,9 +2932,9 @@ export abstract class Plugin extends Component {
     registerEditorExtension(extension: Extension): void;
     /**
      * Register a handler for obsidian:// URLs.
-     * @param action - the action string. For example, "open" corresponds to `obsidian://open`.
+     * @param action - the action string. For example, 'open' corresponds to `obsidian://open`.
      * @param handler - the callback to trigger. A key-value pair that is decoded from the query will be passed in.
-     *                  For example, `obsidian://open?key=value` would generate `{"action": "open", "key": "value"}`.
+     *                  For example, `obsidian://open?key=value` would generate `{'action': 'open', 'key': 'value'}`.
      * @public
      */
     registerObsidianProtocolHandler(action: string, handler: ObsidianProtocolHandler): void;
@@ -2819,6 +2957,14 @@ export abstract class Plugin extends Component {
      * @public
      */
     saveData(data: any): Promise<void>;
+
+    /**
+     * Perform any initial setup code. The user has explicitly interacted with the plugin
+     * so its safe to engage with the user. If your plugin registers a custom view,
+     * you can open it here.
+     * @public
+     */
+    onUserEnable(): void;
 
     /**
      * Called when the `data.json` file is modified on disk externally from Obsidian.
@@ -2951,29 +3097,20 @@ export abstract class PopoverSuggest<T> implements ISuggestOwner<T>, CloseableCo
 }
 
 /**
+ * Describes a text range in a Markdown document.
  * @public
  */
 export interface Pos {
     /**
+     * Starting location.
      * @public
      */
     start: Loc;
     /**
+     * End location.
      * @public
      */
     end: Loc;
-}
-
-/**
- * @public
- */
-export interface PreparedQuery {
-    /** @public */
-    query: string;
-    /** @public */
-    tokens: string[];
-    /** @public */
-    fuzzy: string[];
 }
 
 /**
@@ -2985,11 +3122,6 @@ export interface PreparedQuery {
  * @public
  */
 export function prepareFuzzySearch(query: string): (text: string) => SearchResult | null;
-
-/**
- * @public
- */
-export function prepareQuery(query: string): PreparedQuery;
 
 /**
  * Construct a simple search callback that runs on a target string.
@@ -3021,19 +3153,22 @@ export class ProgressBarComponent extends ValueComponent<number> {
 }
 
 /**
+ * Base interface for items that point to a different location.
  * @public
  */
 export interface Reference {
     /**
+     * Link destination.
      * @public
      */
     link: string;
     /**
+     * Contains the text as it's written in the document. Not available on Publish.
      * @public
      */
     original: string;
     /**
-     * if title is different than link text, in the case of [[page name|display name]]
+     * Available if title is different from link text, in the case of `[[page name|display name]]` this will return `display name`
      * @public
      */
     displayText?: string;
@@ -3135,9 +3270,10 @@ export interface RequestUrlResponsePromise extends Promise<RequestUrlResponse> {
 export function requireApiVersion(version: string): boolean;
 
 /**
+ * Resolve the given subpath to a reference in the MetadataCache.
  * @public
  */
-export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult | null;
+export function resolveSubpath(cache: CachedMetadata, subpath: string): HeadingSubpathResult | BlockSubpathResult | FootnoteSubpathResult | null;
 
 /**
  * @public
@@ -3176,12 +3312,12 @@ export class Scope {
     constructor(parent?: Scope);
     /**
      * Add a keymap event handler to this scope.
-     * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise.
+     * @param modifiers - `Mod`, `Ctrl`, `Meta`, `Shift`, or `Alt`. `Mod` translates to `Meta` on macOS and `Ctrl` otherwise. Pass `null` to capture all events matching the `key`, regardless of modifiers.
      * @param key - Keycode from https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key%5FValues
      * @param func - the callback that will be called when a user triggers the keybind.
      * @public
      */
-    register(modifiers: Modifier[], key: string | null, func: KeymapEventListener): KeymapEventHandler;
+    register(modifiers: Modifier[] | null, key: string | null, func: KeymapEventListener): KeymapEventHandler;
     /**
      * Remove an existing keymap event handler.
      * @public
@@ -3252,9 +3388,10 @@ export interface SectionCache extends CacheItem {
     id?: string | undefined;
     /**
      * The type string generated by the parser.
+     * Typing is non-exhaustive, more types can be available than are documented here.
      * @public
      */
-    type: string;
+    type: 'blockquote' | 'callout' | 'code' | 'element' | 'footnoteDefinition' | 'heading' | 'html' | 'list' | 'paragraph' | 'table' | 'text' | 'thematicBreak' | 'yaml' | string;
 }
 
 /**
@@ -3390,14 +3527,14 @@ export abstract class SettingTab {
      * @see {@link https://docs.obsidian.md/Plugins/User+interface/Settings#Register+a+settings+tab}
      * @public
      */
-    abstract display(): any;
+    abstract display(): void;
     /**
      * Hides the contents of the setting tab.
      * Any registered components should be unloaded when the view is hidden.
      * Override this if you need to perform additional cleanup.
      * @public
      */
-    hide(): any;
+    hide(): void;
 }
 
 /**
@@ -3407,6 +3544,11 @@ export abstract class SettingTab {
  * @public
  */
 export function setTooltip(el: HTMLElement, tooltip: string, options?: TooltipOptions): void;
+
+/**
+ * @public
+ */
+export type Side = 'left' | 'right';
 
 /**
  * @public
@@ -3495,13 +3637,13 @@ export interface Stat {
 export function stringifyYaml(obj: any): string;
 
 /**
- * This function normalizes headings for link matching by stripping out special characters and shrinking consecutive spaces.
+ * Normalizes headings for link matching by stripping out special characters and shrinking consecutive spaces.
  * @public
  */
 export function stripHeading(heading: string): string;
 
 /**
- * This function prepares headings for linking. It strips out some bad combinations of special characters that could break links.
+ * Prepares headings for linking by stripping out some bad combinations of special characters that could break links.
  * @public
  */
 export function stripHeadingForLink(heading: string): string;
@@ -3567,15 +3709,19 @@ export abstract class SuggestModal<T> extends Modal implements ISuggestOwner<T> 
     /**
      * @public
      */
+    selectActiveSuggestion(evt: MouseEvent | KeyboardEvent): void;
+    /**
+     * @public
+     */
     abstract getSuggestions(query: string): T[] | Promise<T[]>;
     /**
      * @public
      */
-    abstract renderSuggestion(value: T, el: HTMLElement): any;
+    abstract renderSuggestion(value: T, el: HTMLElement): void;
     /**
      * @public
      */
-    abstract onChooseSuggestion(item: T, evt: MouseEvent | KeyboardEvent): any;
+    abstract onChooseSuggestion(item: T, evt: MouseEvent | KeyboardEvent): void;
 }
 
 /**
@@ -3944,7 +4090,8 @@ export class Vault extends Events {
      */
     trash(file: TAbstractFile, system: boolean): Promise<void>;
     /**
-     * Rename or move a file.
+     * Rename or move a file. To ensure links are automatically renamed,
+     * use {@link FileManager.renameFile} instead.
      * @param file - the file to rename/move
      * @param newPath - vault absolute path to move file to.
      * @public
@@ -3980,6 +4127,12 @@ export class Vault extends Events {
      * @param fn - a callback function which returns the new content of the note synchronously.
      * @param options - write options.
      * @returns string - the text value of the note that was written.
+     * @example
+     * ```ts
+     * app.vault.process(file, (data) => {
+     *  return data.replace('Hello', 'World');
+     * });
+     * ```
      * @public
      */
     process(file: TFile, fn: (data: string) => string, options?: DataWriteOptions): Promise<string>;
@@ -4007,7 +4160,7 @@ export class Vault extends Events {
      */
     static recurseChildren(root: TFolder, cb: (file: TAbstractFile) => any): void;
     /**
-     * Get all markdown files in the vault.
+     * Get all Markdown files in the vault.
      * @public
      */
     getMarkdownFiles(): TFile[];
@@ -4105,19 +4258,19 @@ export abstract class View extends Component {
     /**
      * @public
      */
-    getState(): any;
+    getState(): Record<string, unknown>;
     /**
      * @public
      */
-    setState(state: any, result: ViewStateResult): Promise<void>;
+    setState(state: unknown, result: ViewStateResult): Promise<void>;
     /**
      * @public
      */
-    getEphemeralState(): any;
+    getEphemeralState(): Record<string, unknown>;
     /**
      * @public
      */
-    setEphemeralState(state: any): void;
+    setEphemeralState(state: unknown): void;
     /**
      * @public
      */
@@ -4158,7 +4311,7 @@ export interface ViewState {
     /**
      * @public
      */
-    state?: any;
+    state?: Record<string, unknown>;
     /**
      * @public
      */
@@ -4171,6 +4324,7 @@ export interface ViewState {
      * @public
      */
     group?: WorkspaceLeaf;
+
 }
 
 /**
@@ -4204,6 +4358,7 @@ export class Workspace extends Events {
     leftRibbon: WorkspaceRibbon;
     /**
      * @public
+     * @deprecated No longer used
      */
     rightRibbon: WorkspaceRibbon;
     /**
@@ -4217,31 +4372,34 @@ export class Workspace extends Events {
      * Please avoid using `activeLeaf` directly, especially without checking whether
      * `activeLeaf` is null.
      *
+     * @public
+     * @deprecated The use of this field is discouraged.
      * The recommended alternatives are:
      * - If you need information about the current view, use {@link Workspace.getActiveViewOfType}.
      * - If you need to open a new file or navigate a view, use {@link Workspace.getLeaf}.
-     *
-     * @public
-     * @deprecated - The use of this field is discouraged.
      */
     activeLeaf: WorkspaceLeaf | null;
 
     /**
+     *
      * @public
      */
     containerEl: HTMLElement;
     /**
+     * If the layout of the app has been successfully initialized.
+     * To react to the layout becoming ready, use {@link Workspace.onLayoutReady}
      * @public
      */
     layoutReady: boolean;
     /**
+     * Save the state of the current workspace layout.
      * @public
      */
     requestSaveLayout: Debouncer<[], Promise<void>>;
 
     /**
-     * A component managing the current editor. This can be null
-     * if the active view has no editor.
+     * A component managing the current editor.
+     * This can be null if the active view has no editor.
      * @public
      */
     activeEditor: MarkdownFileInfo | null;
@@ -4260,7 +4418,7 @@ export class Workspace extends Events {
     /**
      * @public
      */
-    getLayout(): any;
+    getLayout(): Record<string, unknown>;
 
     /**
      * @public
@@ -4318,6 +4476,7 @@ export class Workspace extends Events {
      * Migrates this leaf to a new popout window.
      * Only works on the desktop app.
      * @public
+     * @throws Error if the app does not support popout windows (i.e. on mobile or if Electron version is too old)
      */
     moveLeafToPopout(leaf: WorkspaceLeaf, data?: WorkspaceWindowInitData): WorkspaceWindow;
 
@@ -4348,37 +4507,60 @@ export class Workspace extends Events {
     setActiveLeaf(leaf: WorkspaceLeaf, pushHistory: boolean, focus: boolean): void;
 
     /**
+     * Retrieve a leaf by its id.
+     * @param id id of the leaf to retrieve.
      * @public
      */
     getLeafById(id: string): WorkspaceLeaf | null;
     /**
+     * Get all leaves that belong to a group
+     * @param group id
      * @public
      */
     getGroupLeaves(group: string): WorkspaceLeaf[];
 
     /**
+     * Get the most recently active leaf in a given workspace root. Useful for interacting with the leaf in the root split while a sidebar leaf might be active.
+     * @param root Root for the leaves you want to search. If a root is not provided, the `rootSplit` and leaves within pop-outs will be searched.
      * @public
      */
     getMostRecentLeaf(root?: WorkspaceParent): WorkspaceLeaf | null;
     /**
+     * Create a new leaf inside the left sidebar.
+     * @param split Should the existing split be split up?
      * @public
      */
     getLeftLeaf(split: boolean): WorkspaceLeaf | null;
     /**
+     * Create a new leaf inside the right sidebar.
+     * @param split Should the existing split be split up?
      * @public
      */
     getRightLeaf(split: boolean): WorkspaceLeaf | null;
+    /**
+     * Get side leaf or create one if one does not exist.
+     * @public
+     */
+    ensureSideLeaf(type: string, side: Side, options?: {
+        /** @public */
+        active?: boolean;
+        /** @public */
+        split?: boolean;
+        /** @public */
+        reveal?: boolean;
+        /** @public */
+        state?: any;
+    }): Promise<WorkspaceLeaf>;
 
     /**
+     * Get the currently active view of a given type.
      * @public
      */
     getActiveViewOfType<T extends View>(type: Constructor<T>): T | null;
 
     /**
-     * Returns the file for the current view if it's a FileView.
-     *
-     * Otherwise, it will recent the most recently active file.
-     *
+     * Returns the file for the current view if it's a `FileView`.
+     * Otherwise, it will return the most recently active file.
      * @public
      */
     getActiveFile(): TFile | null;
@@ -4394,44 +4576,55 @@ export class Workspace extends Events {
      */
     iterateAllLeaves(callback: (leaf: WorkspaceLeaf) => any): void;
     /**
+     * Get all leaves of a given type.
      * @public
      */
     getLeavesOfType(viewType: string): WorkspaceLeaf[];
     /**
+     * Remove all leaves of the given type.
      * @public
      */
     detachLeavesOfType(viewType: string): void;
 
     /**
+     * Bring a given leaf to the foreground. If the leaf is in a sidebar, the sidebar will be uncollapsed.
+     * `await` this function to ensure your view has been fully loaded and is not deferred.
      * @public
      */
-    revealLeaf(leaf: WorkspaceLeaf): void;
+    revealLeaf(leaf: WorkspaceLeaf): Promise<void>;
     /**
+     * Get the filenames of the 10 most recently opened files.
      * @public
      */
     getLastOpenFiles(): string[];
 
     /**
-     * Calling this function will update/reconfigure the options of all markdown panes.
+     * Calling this function will update/reconfigure the options of all Markdown views.
      * It is fairly expensive, so it should not be called frequently.
      * @public
      */
     updateOptions(): void;
 
     /**
+     * Triggered when the active Markdown file is modified. React to file changes before they
+     * are saved to disk.
      * @public
      */
     on(name: 'quick-preview', callback: (file: TFile, data: string) => any, ctx?: any): EventRef;
     /**
+     * Triggered when a `WorkspaceItem` is resized or the workspace layout has changed.
      * @public
      */
     on(name: 'resize', callback: () => any, ctx?: any): EventRef;
 
     /**
+     * Triggered when the active leaf changes.
      * @public
      */
     on(name: 'active-leaf-change', callback: (leaf: WorkspaceLeaf | null) => any, ctx?: any): EventRef;
     /**
+     * Triggered when the active file changes. The file could be in a new leaf, an existing leaf,
+     * or an embed.
      * @public
      */
     on(name: 'file-open', callback: (file: TFile | null) => any, ctx?: any): EventRef;
@@ -4441,10 +4634,12 @@ export class Workspace extends Events {
      */
     on(name: 'layout-change', callback: () => any, ctx?: any): EventRef;
     /**
+     * Triggered when a new popout window is created.
      * @public
      */
     on(name: 'window-open', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
     /**
+     * Triggered when a popout window is closed.
      * @public
      */
     on(name: 'window-close', callback: (win: WorkspaceWindow, window: Window) => any, ctx?: any): EventRef;
@@ -4453,6 +4648,7 @@ export class Workspace extends Events {
      * @public
      */
     on(name: 'css-change', callback: () => any, ctx?: any): EventRef;
+
     /**
      * Triggered when the user opens the context menu on a file.
      * @public
@@ -4496,7 +4692,8 @@ export class Workspace extends Events {
     on(name: 'editor-drop', callback: (evt: DragEvent, editor: Editor, info: MarkdownView | MarkdownFileInfo) => any, ctx?: any): EventRef;
 
     /**
-     * Triggered when the app is about to quit. Not guaranteed to actually run.
+     * Triggered when the app is about to quit.
+     * Not guaranteed to actually run.
      * Perform some best effort cleanup here.
      * @public
      */
@@ -4520,6 +4717,8 @@ export abstract class WorkspaceContainer extends WorkspaceSplit {
  * @public
  */
 export class WorkspaceFloating extends WorkspaceParent {
+    /** @public */
+    parent: WorkspaceParent;
 
 }
 
@@ -4566,6 +4765,8 @@ export class WorkspaceLeaf extends WorkspaceItem {
     parent: WorkspaceTabs | WorkspaceMobileDrawer;
 
     /**
+     * The view associated with this leaf. Do not attempt to cast this to your
+     * custom `View` without first checking `instanceof`.
      * @public
      */
     view: View;
@@ -4591,6 +4792,20 @@ export class WorkspaceLeaf extends WorkspaceItem {
      * @public
      */
     setViewState(viewState: ViewState, eState?: any): Promise<void>;
+    /**
+     * Returns true if this leaf is currently deferred because it is in the background.
+     * A deferred leaf will have a DeferredView as its view, instead of the View that
+     * it should normally have for its type (like MarkdownView for the `markdown` type).
+     * @since 1.7.2
+     * @public
+     */
+    get isDeferred(): boolean;
+    /**
+     * If this view is currently deferred, load it and await that it has fully loaded.
+     * @since 1.7.2
+     * @public
+     */
+    loadIfDeferred(): Promise<void>;
 
     /**
      * @public
@@ -4652,6 +4867,9 @@ export class WorkspaceLeaf extends WorkspaceItem {
 export class WorkspaceMobileDrawer extends WorkspaceParent {
 
     /** @public */
+    parent: WorkspaceParent;
+
+    /** @public */
     collapsed: boolean;
 
     /** @public */
@@ -4710,6 +4928,8 @@ export class WorkspaceSidedock extends WorkspaceSplit {
  * @public
  */
 export class WorkspaceSplit extends WorkspaceParent {
+    /** @public */
+    parent: WorkspaceParent;
 
 }
 
@@ -4717,6 +4937,9 @@ export class WorkspaceSplit extends WorkspaceParent {
  * @public
  */
 export class WorkspaceTabs extends WorkspaceParent {
+
+    /** @public */
+    parent: WorkspaceSplit;
 
 }
 

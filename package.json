@@ -1,9 +1,11 @@
 {
     "name": "@polyipseity/obsidian",
-    "version": "1.6.6",
+    "version": "1.7.2",
     "description": "Type definitions for the latest Obsidian API (https://obsidian.md)",
-    "keywords": ["obsdmd"],
-    "homepage": "https://github.com/polyipseity/obsidian-api#readme",
+    "keywords": [
+        "obsdmd"
+    ],
+    "homepage": "https://obsidian.md",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/polyipseity/obsidian-api.git"
